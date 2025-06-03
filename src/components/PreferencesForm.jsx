@@ -1,51 +1,68 @@
-// components/PreferencesForm.jsx
-import React, { useState } from "react";
-import { collection, addDoc } from "firebase/firestore";
+// src/components/PreferencesForm.jsx
+import React, { useEffect, useState } from "react";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
-export default function PreferencesForm() {
-  const [username, setUsername] = useState("");
+export default function PreferencesForm({ user }) {
   const [genres, setGenres] = useState("");
   const [mood, setMood] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchPreferences = async () => {
+      setLoading(true);
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setGenres(data.genres.join(", "));
+        setMood(data.mood);
+      }
+      setLoading(false);
+    };
+    fetchPreferences();
+  }, [user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await addDoc(collection(db, "users"), {
-      username,
+    if (!user) return alert("Has d'iniciar sessió primer!");
+    if (!genres.trim() || !mood.trim()) return alert("Omple tots els camps!");
+
+    setLoading(true);
+    const docRef = doc(db, "users", user.uid);
+    await setDoc(docRef, {
       genres: genres.split(",").map((g) => g.trim()),
-      mood,
+      mood: mood.trim(),
     });
-    setUsername("");
-    setGenres("");
-    setMood("");
+    setLoading(false);
     alert("Preferències desades correctament!");
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <input
-        type="text"
-        placeholder="Nom d'usuari"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        className="w-full p-2 border rounded"
-      />
-      <input
-        type="text"
-        placeholder="Gèneres (rock, pop, etc.)"
-        value={genres}
-        onChange={(e) => setGenres(e.target.value)}
-        className="w-full p-2 border rounded"
-      />
-      <input
-        type="text"
-        placeholder="Estat d’ànim (feliç, tranquil...)"
-        value={mood}
-        onChange={(e) => setMood(e.target.value)}
-        className="w-full p-2 border rounded"
-      />
-      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-        Desar preferències
+    <form onSubmit={handleSubmit}>
+      <label>
+        Gèneres (separats per comes)
+        <input
+          type="text"
+          value={genres}
+          onChange={(e) => setGenres(e.target.value)}
+          placeholder="rock, pop, jazz..."
+          disabled={loading}
+        />
+      </label>
+      <label>
+        Estat d’ànim
+        <input
+          type="text"
+          value={mood}
+          onChange={(e) => setMood(e.target.value)}
+          placeholder="feliç, tranquil, energètic..."
+          disabled={loading}
+        />
+      </label>
+      <button className="btn-primary" type="submit" disabled={loading}>
+        {loading ? "Guardant..." : "Desa preferències"}
       </button>
     </form>
   );
