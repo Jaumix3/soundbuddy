@@ -17,7 +17,7 @@ export default function Recommendations({ user }) {
     try {
       // Fem una consulta a Firestore per agafar preferències
       const responsePrefs = await fetch(
-        `https://firestore.googleapis.com/v1/projects/YOUR_PROJECT_ID/databases/(default)/documents/users/${user.uid}`
+        `https://firestore.googleapis.com/v1/projects/sounbuddy/databases/(default)/documents/users/${user.uid}`
       );
       const prefsData = await responsePrefs.json();
       const genres = prefsData.fields.genres.arrayValue.values

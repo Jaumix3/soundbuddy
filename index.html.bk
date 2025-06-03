@@ -4,13 +4,12 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBPecqMyWKmIaK3MVwJWr227m4Fgwg33dA",
-  authDomain: "sounbuddy.firebaseapp.com",
-  projectId: "sounbuddy",
-  storageBucket: "sounbuddy.firebasestorage.app",
-  messagingSenderId: "609565730059",
-  appId: "1:609565730059:web:592a2d1550c99dc71fae0e",
-  measurementId: "G-VFP5C8KSP4"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
 const app = initializeApp(firebaseConfig);
