@@ -4,7 +4,7 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBPecqMyWKmIaK3MVwJWr227m4Fgwg33dA",
+  apiKey: "your_API_key",
   authDomain: "sounbuddy.firebaseapp.com",
   projectId: "sounbuddy",
   storageBucket: "sounbuddy.firebasestorage.app",
